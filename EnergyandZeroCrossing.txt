@@ -1,0 +1,64 @@
+EXP 1
+clc
+clear all
+close all
+
+[y fs]=wavread('bird');
+ y = y(:,1);  % selecting 1st coloum
+ L = length(y);
+% sound(y,0.05*fs)
+
+jj=442;
+ ii=1;
+ Nf=floor(L/jj)
+for i=1:Nf
+    Z(i,:)=y(ii:jj);
+    ii=jj+1;
+    jj=(i+1)*442;
+    data=Z(i,:);
+    [cnt]=ZeroCrossing(data)
+     rc(1,i)=cnt;
+end
+
+for i=1:Nf-1
+    a=0
+    for kk=1:442
+        a= a+Z(i,kk)^2;  %energy of a frame from 1 to 442
+    end
+    E(1,i)=a;
+end
+
+subplot(3,1,1);plot(y);xlabel('sample no.');ylabel('amplitude')
+ subplot(3,1,3);plot(rc);xlabel('sample no.');ylabel('Zc count')
+subplot(3,1,2);plot(E);xlabel('frame no.');ylabel('Energy')
+ y= rc(:);
+ total_Zero_crc=sum(y)
+
+
+**************************************************************
+Zero Count Function
+
+function[cnt]=ZeroCrossing(data)
+cnt=0;
+flg=1;
+
+if data(1)<0
+    flg=0;
+end
+
+for jj = 2:length(data)-1
+    if data(jj)~=0
+        if flg==1
+            if data(jj)<0
+                flg=0;
+                cnt=cnt+1;
+            end
+        else data(jj)>0
+                flg=0;
+                cnt=cnt+1;
+        end 
+    end
+end
+end
+
+
