@@ -1,0 +1,44 @@
+%Pitch estimation  3/1/2017%
+% F1 F2 is used to study the phonotics of letters%
+
+clc;
+clear all;
+close all;
+[y fs]=wavread('drum');
+y=y(:,1);
+
+L=length(y);
+N=0.020*fs;
+Nf=round(L/N)-1;
+% y1=y(18000:18884);
+y1=y;
+
+for i=1:N
+    a=0;
+    for j=1:45
+        a=abs(y1(j)-y1(j+i));
+    end
+    AM=a/N;
+    AMDF(i,1)=AM;
+end
+
+subplot(2,1,1);
+plot(y1);
+xlabel('sample_No');
+ylabel('Amplitude');
+title('Speech Signal');
+
+subplot(2,1,2);
+plot(AMDF);
+xlabel('sample_No');
+ylabel('Amplitude');
+title('AMDF Plot');
+
+
+[x1 m1]=min(AMDF(1:104));
+[x2 m2]=min(AMDF(101:200));
+ML=m1;
+m2=m2+100;
+p=(m2-ML)/fs;
+pitch=1/p
+
