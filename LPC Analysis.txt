@@ -1,0 +1,66 @@
+EXPT 8
+
+
+
+
+`%LPC analysis of speech signal%
+clc;
+clear all;
+[y,fs,nbit]=wavread('a.wav');
+figure;
+plot(y);
+title('speech signal');   
+xlabel('No of sample');ylabel('amplitude');
+[m n]=size(y)
+disp(m);
+ts=1/fs;%sampling rate
+N=0.02/ts;%samples per frame
+disp(N)
+nf=floor(m/N)-1;%no. of frames
+y1=y(2000:2880);%selection of voiced frame
+figure;
+subplot(2,1,1);
+plot(y1);
+title('plot of Voiced part of signal');   
+xlabel('No of sample');ylabel('amplitude');
+r(1)=1;
+for ii=1:N
+    auto=0;
+ for jj=1:45
+            auto= auto+abs(y1(jj)*y1(jj+ii));%correlation formula
+ end
+ AM=auto/N;
+          r(ii,1)= AM ;
+ end
+subplot(2,1,2);
+plot(r);
+title('plot of correlation of signal');   
+xlabel('no of samples');ylabel('correlation');
+A = LEVINSON(r,12) ;
+figure;
+plot(A)
+title('LPC For Voiced Frame');   
+xlabel('No of coeficient ');ylabel('value of coeficient');
+
+
+
+
+
+
+
+
+
+
+
+
+output
+ 
+                     Original Speech Signal
+
+
+ 
+
+                                                           Framing and Autocorrelation of Signal
+
+ 
+                                                           Lpc Coefficient of speech signal 
