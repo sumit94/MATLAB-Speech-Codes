@@ -1,0 +1,61 @@
+% Expt 6:
+
+
+clc;
+clear all;
+close all;
+
+%Finding the voiced part of given signal %
+[f p]=wavread('drum.wav');
+figure;
+plot(f);
+a=f(18000:18256);
+subplot(3,1,1);
+plot(a);
+title('Plot of voiced part of signal');
+xlabel('Sample No---->');
+ylabel('Amplitude---->');
+
+
+% Carrying out the Windowing operation%
+a1=window(@hamming,256);
+for i=1:256
+    a11(i)=a(i)*a1(i);
+end
+subplot(3,1,2);
+plot(a11);
+title('plot of windowed voiced part of signal');
+xlabel('Sample No---->');
+ylabel('Amplitude---->');
+
+%Converting the windowed data into fourier transform and finally into log scale%
+b=fft(a11);
+b1=abs(b);
+c=log(b1);
+
+
+%Now applying Discrete Cosine Transform%
+for i=1:256
+    f(i)=22100/256*i;
+end
+
+for i=1:256
+    c1(i)=c(i);
+end
+
+for i=1:256
+    m(i)=2595*log(1+f(i)/700);
+end
+
+subplot(3,1,3);
+stem(m,c1);
+title('Plot of log spectrum in MEL scale for voiced speech');
+xlabel('Frequency in Mel Scale');
+ylabel('Amplitude in db');
+
+x=melcepst(a);
+figure;
+stem(x);
+title('Plot of MFCC using Matlab command for voiced signal');
+xlabel('Frequency in Mel Scale');
+ylabel('Amplitude in db');
